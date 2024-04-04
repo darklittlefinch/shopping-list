@@ -53,8 +53,9 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
     }
 
     companion object {
-        private const val ACTIVATED_VIEW_TYPE = 1
-        private const val DEACTIVATED_VIEW_TYPE = 0
+        const val ACTIVATED_VIEW_TYPE = 1
+        const val DEACTIVATED_VIEW_TYPE = 0
+        const val MAX_POOL_SIZE = 5
     }
 
     class ShopItemViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
