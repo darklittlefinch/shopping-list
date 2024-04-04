@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.elliemoritz.shoppinglist.R
+import com.elliemoritz.shoppinglist.domain.ShopItem
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,5 +38,9 @@ class MainActivity : AppCompatActivity() {
             ShopListAdapter.DEACTIVATED_VIEW_TYPE,
             ShopListAdapter.MAX_POOL_SIZE
         )
+
+        adapter.onShopItemLongClickListener = {
+            viewModel.changeEnableState(it)
+        }
     }
 }
