@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.elliemoritz.shoppinglist.R
 import com.elliemoritz.shoppinglist.domain.ShopItem
+import java.lang.RuntimeException
 
 class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>() {
 
@@ -17,10 +18,10 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopItemViewHolder {
-        val layoutResId = if (viewType == ACTIVATED_VIEW_TYPE) {
-            R.layout.item_shop_activated
-        } else {
-            R.layout.item_shop_deactivated
+        val layoutResId = when (viewType) {
+            ACTIVATED_VIEW_TYPE -> R.layout.item_shop_activated
+            DEACTIVATED_VIEW_TYPE -> R.layout.item_shop_deactivated
+            else -> throw RuntimeException("Unknown view type: $viewType")
         }
 
         val view = LayoutInflater.from(parent.context).inflate(
