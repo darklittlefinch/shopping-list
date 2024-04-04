@@ -2,6 +2,7 @@ package com.elliemoritz.shoppinglist.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.elliemoritz.shoppinglist.R
@@ -41,6 +42,10 @@ class MainActivity : AppCompatActivity() {
 
         adapter.onShopItemLongClickListener = {
             viewModel.changeEnableState(it)
+        }
+
+        adapter.onShopItemClickListener = {
+            Log.d("TEST_CLICK", it.toString())
         }
     }
 }
