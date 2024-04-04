@@ -17,8 +17,14 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopItemViewHolder {
+        val layoutResId = if (viewType == ACTIVATED_VIEW_TYPE) {
+            R.layout.item_shop_activated
+        } else {
+            R.layout.item_shop_deactivated
+        }
+
         val view = LayoutInflater.from(parent.context).inflate(
-            R.layout.item_shop_activated,
+            layoutResId,
             parent,
             false
         )
@@ -34,6 +40,20 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
         holder.view.setOnLongClickListener {
             true
         }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        val shopItem = shopList[position]
+        return if (shopItem.isActive) {
+            ACTIVATED_VIEW_TYPE
+        } else {
+            DEACTIVATED_VIEW_TYPE
+        }
+    }
+
+    companion object {
+        private const val ACTIVATED_VIEW_TYPE = 1
+        private const val DEACTIVATED_VIEW_TYPE = 0
     }
 
     class ShopItemViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
