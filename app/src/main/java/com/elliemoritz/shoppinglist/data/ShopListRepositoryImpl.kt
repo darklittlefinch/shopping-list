@@ -41,11 +41,8 @@ object ShopListRepositoryImpl : ShopListRepository {
     }
 
     override fun editShopItem(shopItem: ShopItem) {
-        val oldShopItem = shopList.find { it.id == shopItem.id }
-            ?: throw RuntimeException(
-                "Unable to edit shop item: element with id ${shopItem.id} not found"
-            )
-        shopList.remove(oldShopItem)
+        val oldElement = getShopItem(shopItem.id)
+        shopList.remove(oldElement)
         addShopItem(shopItem)
     }
 
