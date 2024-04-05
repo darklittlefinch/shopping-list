@@ -1,18 +1,13 @@
 package com.elliemoritz.shoppinglist.presentation
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.elliemoritz.shoppinglist.R
 import com.elliemoritz.shoppinglist.domain.ShopItem
-import java.lang.RuntimeException
 
 class ShopListAdapter :
-    ListAdapter<ShopItem, ShopListAdapter.ShopItemViewHolder>(ShopItemDiffCallback()) {
+    ListAdapter<ShopItem, ShopItemViewHolder>(ShopItemDiffCallback()) {
 
     var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
     var onShopItemClickListener: ((ShopItem) -> Unit)? = null
@@ -58,10 +53,5 @@ class ShopListAdapter :
         const val ACTIVATED_VIEW_TYPE = 1
         const val DEACTIVATED_VIEW_TYPE = 0
         const val MAX_POOL_SIZE = 5
-    }
-
-    class ShopItemViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        val tvName = view.findViewById<TextView>(R.id.tvName)
-        val tvCount = view.findViewById<TextView>(R.id.tvCount)
     }
 }
