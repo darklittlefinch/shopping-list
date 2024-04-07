@@ -1,23 +1,22 @@
 package com.elliemoritz.shoppinglist.presentation
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.SimpleCallback
 import androidx.recyclerview.widget.RecyclerView
-import com.elliemoritz.shoppinglist.R
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.elliemoritz.shoppinglist.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var adapter: ShopListAdapter
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setupBinding()
 
         setupRecyclerView()
 
@@ -29,22 +28,27 @@ class MainActivity : AppCompatActivity() {
         setupAddButton()
     }
 
-    private fun setupRecyclerView() {
-        val rvShopList = findViewById<RecyclerView>(R.id.rvShopList)
-        adapter = ShopListAdapter()
-        rvShopList.adapter = adapter
+    private fun setupBinding() {
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+    }
 
-        rvShopList.recycledViewPool.setMaxRecycledViews(
+    private fun setupRecyclerView() {
+        adapter = ShopListAdapter()
+        binding.rvShopList.adapter = adapter
+
+        binding.rvShopList.recycledViewPool.setMaxRecycledViews(
             ShopListAdapter.ACTIVATED_VIEW_TYPE, ShopListAdapter.MAX_POOL_SIZE
         )
 
-        rvShopList.recycledViewPool.setMaxRecycledViews(
+        binding.rvShopList.recycledViewPool.setMaxRecycledViews(
             ShopListAdapter.DEACTIVATED_VIEW_TYPE, ShopListAdapter.MAX_POOL_SIZE
         )
 
         setupLongClickListener()
         setupClickListener()
-        setupSwipeListener(rvShopList)
+        setupSwipeListener(binding.rvShopList)
     }
 
     private fun setupLongClickListener() {
@@ -83,10 +87,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupAddButton() {
-        val fabAddNewShopItem = findViewById<FloatingActionButton>(
-            R.id.fabAddNewShopItem
-        )
-        fabAddNewShopItem.setOnClickListener {
+        binding.fabAddNewShopItem.setOnClickListener {
             val intent = ShopItemActivity.newIntentAddItem(this)
             startActivity(intent)
         }
