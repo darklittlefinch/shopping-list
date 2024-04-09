@@ -18,9 +18,15 @@ class ShopItemActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setupBinding()
         setShopItemId()
+        if (savedInstanceState == null) {
+            launchFragment()
+        }
+    }
+
+    private fun launchFragment() {
         val fragment = ShopItemFragment.newInstance(shopItemId)
         supportFragmentManager.beginTransaction()
-            .add(R.id.shopItemContainer, fragment)
+            .replace(R.id.shopItemContainer, fragment)
             .commit()
     }
 
