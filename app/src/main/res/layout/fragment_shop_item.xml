@@ -23,8 +23,10 @@
             android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/blue_deactivated"
             android:hint="@string/name"
-            android:inputType="textCapWords" />
+            android:inputType="textCapWords"
+            android:textColor="@color/dark_blue" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -44,8 +46,10 @@
             android:id="@+id/etCount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/blue_deactivated"
             android:hint="@string/count"
-            android:inputType="number" />
+            android:inputType="number"
+            android:textColor="@color/dark_blue" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
