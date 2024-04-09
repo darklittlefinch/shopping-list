@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.SimpleCallback
 import androidx.recyclerview.widget.RecyclerView
+import com.elliemoritz.shoppinglist.R
 import com.elliemoritz.shoppinglist.databinding.ActivityMainBinding
+import com.elliemoritz.shoppinglist.domain.ShopItem
 
 class MainActivity : AppCompatActivity() {
 
@@ -59,8 +61,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupClickListener() {
         adapter.onShopItemClickListener = {
-            val intent = ShopItemActivity.newIntentEditItem(this, it.id)
-            startActivity(intent)
+            if (isOrientationLandscape()) {
+                launchFragment(it.id)
+            } else {
+                val intent = ShopItemActivity.newIntentEditItem(this, it.id)
+                startActivity(intent)
+            }
         }
     }
 
@@ -86,10 +92,27 @@ class MainActivity : AppCompatActivity() {
         itemTouchHelper.attachToRecyclerView(rv)
     }
 
+    private fun isOrientationLandscape(): Boolean {
+        return binding.shopItemContainer != null
+    }
+
+    private fun launchFragment(id: Int = ShopItem.UNDEFINED_ID) {
+        supportFragmentManager.popBackStack()
+        val fragment = ShopItemFragment.newInstance(id)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.shopItemContainer, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
     private fun setupAddButton() {
         binding.fabAddNewShopItem.setOnClickListener {
-            val intent = ShopItemActivity.newIntentAddItem(this)
-            startActivity(intent)
+            if (isOrientationLandscape()) {
+                launchFragment()
+            } else {
+                val intent = ShopItemActivity.newIntentAddItem(this)
+                startActivity(intent)
+            }
         }
     }
 }
