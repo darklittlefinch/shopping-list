@@ -1,5 +1,6 @@
 package com.elliemoritz.shoppinglist.presentation
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -19,6 +20,17 @@ class ShopItemFragment : Fragment() {
     private lateinit var viewModel: ShopItemViewModel
 
     private var shopItemId = ShopItem.UNDEFINED_ID
+
+    private lateinit var onEditingFinishedListener: OnEditingFinishedListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnEditingFinishedListener) {
+            onEditingFinishedListener = context
+        } else {
+            throw java.lang.RuntimeException("Activity must implement OnEditingFinishedListener")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,7 +93,7 @@ class ShopItemFragment : Fragment() {
         setupResetErrorInputCount()
 
         viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
-            activity?.onBackPressedDispatcher?.onBackPressed()
+            onEditingFinishedListener.onEditingFinished()
         }
     }
 
@@ -131,5 +143,9 @@ class ShopItemFragment : Fragment() {
                 }
             }
         }
+    }
+
+    interface OnEditingFinishedListener {
+        fun onEditingFinished()
     }
 }

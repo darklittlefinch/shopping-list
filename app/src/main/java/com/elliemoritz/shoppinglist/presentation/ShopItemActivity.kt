@@ -3,12 +3,13 @@ package com.elliemoritz.shoppinglist.presentation
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.elliemoritz.shoppinglist.R
 import com.elliemoritz.shoppinglist.databinding.ActivityShopItemBinding
 import com.elliemoritz.shoppinglist.domain.ShopItem
 
-class ShopItemActivity : AppCompatActivity() {
+class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
     private lateinit var binding: ActivityShopItemBinding
 
@@ -52,5 +53,10 @@ class ShopItemActivity : AppCompatActivity() {
             intent.putExtra(EXTRA_ID, id)
             return intent
         }
+    }
+
+    override fun onEditingFinished() {
+        Toast.makeText(this, getString(R.string.success), Toast.LENGTH_SHORT).show()
+        finish()
     }
 }

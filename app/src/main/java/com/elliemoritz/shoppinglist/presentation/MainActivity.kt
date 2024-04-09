@@ -1,6 +1,7 @@
 package com.elliemoritz.shoppinglist.presentation
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -10,7 +11,7 @@ import com.elliemoritz.shoppinglist.R
 import com.elliemoritz.shoppinglist.databinding.ActivityMainBinding
 import com.elliemoritz.shoppinglist.domain.ShopItem
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var adapter: ShopListAdapter
@@ -114,5 +115,10 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         }
+    }
+
+    override fun onEditingFinished() {
+        Toast.makeText(this, getString(R.string.success), Toast.LENGTH_SHORT).show()
+        supportFragmentManager.popBackStack()
     }
 }
