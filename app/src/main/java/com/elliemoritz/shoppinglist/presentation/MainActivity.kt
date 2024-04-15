@@ -1,22 +1,25 @@
 package com.elliemoritz.shoppinglist.presentation
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.SimpleCallback
 import androidx.recyclerview.widget.RecyclerView
 import com.elliemoritz.shoppinglist.R
+import com.elliemoritz.shoppinglist.databinding.ActivityMainBinding
+import com.elliemoritz.shoppinglist.domain.ShopItem
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ShopItemFragment.OnEditingFinishedListener {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var adapter: ShopListAdapter
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setupBinding()
 
         setupRecyclerView()
 
@@ -24,24 +27,31 @@ class MainActivity : AppCompatActivity() {
         viewModel.shopList.observe(this) {
             adapter.submitList(it)
         }
+
+        setupAddButton()
+    }
+
+    private fun setupBinding() {
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
     }
 
     private fun setupRecyclerView() {
-        val rvShopList = findViewById<RecyclerView>(R.id.rvShopList)
         adapter = ShopListAdapter()
-        rvShopList.adapter = adapter
+        binding.rvShopList.adapter = adapter
 
-        rvShopList.recycledViewPool.setMaxRecycledViews(
+        binding.rvShopList.recycledViewPool.setMaxRecycledViews(
             ShopListAdapter.ACTIVATED_VIEW_TYPE, ShopListAdapter.MAX_POOL_SIZE
         )
 
-        rvShopList.recycledViewPool.setMaxRecycledViews(
+        binding.rvShopList.recycledViewPool.setMaxRecycledViews(
             ShopListAdapter.DEACTIVATED_VIEW_TYPE, ShopListAdapter.MAX_POOL_SIZE
         )
 
         setupLongClickListener()
         setupClickListener()
-        setupSwipeListener(rvShopList)
+        setupSwipeListener(binding.rvShopList)
     }
 
     private fun setupLongClickListener() {
@@ -52,7 +62,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupClickListener() {
         adapter.onShopItemClickListener = {
-            Log.d("TEST_CLICK", it.toString())
+            if (isOrientationLandscape()) {
+                launchFragment(it.id)
+            } else {
+                val intent = ShopItemActivity.newIntentEditItem(this, it.id)
+                startActivity(intent)
+            }
         }
     }
 
@@ -76,5 +91,34 @@ class MainActivity : AppCompatActivity() {
 
         val itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView(rv)
+    }
+
+    private fun isOrientationLandscape(): Boolean {
+        return binding.shopItemContainer != null
+    }
+
+    private fun launchFragment(id: Int = ShopItem.UNDEFINED_ID) {
+        supportFragmentManager.popBackStack()
+        val fragment = ShopItemFragment.newInstance(id)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.shopItemContainer, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
+    private fun setupAddButton() {
+        binding.fabAddNewShopItem.setOnClickListener {
+            if (isOrientationLandscape()) {
+                launchFragment()
+            } else {
+                val intent = ShopItemActivity.newIntentAddItem(this)
+                startActivity(intent)
+            }
+        }
+    }
+
+    override fun onEditingFinished() {
+        Toast.makeText(this, getString(R.string.success), Toast.LENGTH_SHORT).show()
+        supportFragmentManager.popBackStack()
     }
 }
