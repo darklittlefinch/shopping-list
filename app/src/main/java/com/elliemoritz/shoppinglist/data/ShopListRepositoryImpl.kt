@@ -1,57 +1,40 @@
 package com.elliemoritz.shoppinglist.data
 
+import android.app.Application
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
 import com.elliemoritz.shoppinglist.domain.ShopItem
 import com.elliemoritz.shoppinglist.domain.ShopListRepository
-import java.lang.RuntimeException
-import kotlin.random.Random
 
-object ShopListRepositoryImpl : ShopListRepository {
+class ShopListRepositoryImpl(
+    application: Application
+) : ShopListRepository {
 
-    private val shopListLiveData = MutableLiveData<List<ShopItem>>()
-    private val shopList = sortedSetOf<ShopItem>({ o1, o2 -> o1.id.compareTo(o2.id) })
-    private var autoIncrementId = 0
-
-    init {
-        for (i in 0 until 100) {
-            val item = ShopItem("Name $i", i, Random.nextBoolean())
-            addShopItem(item)
-        }
-    }
+    private val shopListDao = AppDatabase.getInstance(application).shopListDao()
+    private val mapper = ShopListMapper()
 
     override fun getShopList(): LiveData<List<ShopItem>> {
-        return shopListLiveData
-    }
-
-    override fun getShopItem(id: Int): ShopItem {
-        return shopList.find { it.id == id }
-            ?: throw RuntimeException(
-                "Unable to get shop item: element with id $id not found"
-            )
-    }
-
-    override fun addShopItem(shopItem: ShopItem) {
-        if (shopItem.id == ShopItem.UNDEFINED_ID) {
-            shopItem.id = autoIncrementId
-            autoIncrementId++
+        return shopListDao.getShopList().map {
+            mapper.mapDbModelListToEntityList(it)
         }
-        shopList.add(shopItem)
-        updateList()
     }
 
-    override fun editShopItem(shopItem: ShopItem) {
-        val oldElement = getShopItem(shopItem.id)
-        shopList.remove(oldElement)
-        addShopItem(shopItem)
+    override suspend fun getShopItem(id: Int): ShopItem {
+        val shopItemDbModel = shopListDao.getSHopItem(id)
+        return mapper.mapDbModelToEntity(shopItemDbModel)
     }
 
-    override fun deleteShopItem(shopItem: ShopItem) {
-        shopList.remove(shopItem)
-        updateList()
+    override suspend fun addShopItem(shopItem: ShopItem) {
+        val shopItemDbModel = mapper.mapEntityToDbModel(shopItem)
+        shopListDao.addShopItem(shopItemDbModel)
     }
 
-    private fun updateList() {
-        shopListLiveData.value = shopList.toList()
+    override suspend fun editShopItem(shopItem: ShopItem) {
+        val shopItemDbModel = mapper.mapEntityToDbModel(shopItem)
+        shopListDao.addShopItem(shopItemDbModel)
+    }
+
+    override suspend fun deleteShopItem(shopItem: ShopItem) {
+        shopListDao.deleteShopItem(shopItem.id)
     }
 }
