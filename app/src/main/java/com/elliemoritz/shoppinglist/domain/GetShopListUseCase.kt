@@ -1,7 +1,6 @@
 package com.elliemoritz.shoppinglist.domain
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 
 class GetShopListUseCase(private val shopListRepository: ShopListRepository) {
 
