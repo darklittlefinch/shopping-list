@@ -25,7 +25,6 @@ class ShopItemFragment : Fragment() {
     private lateinit var onEditingFinishedListener: OnEditingFinishedListener
 
     override fun onAttach(context: Context) {
-        Log.d("LIFECYCLE", "onAttach")
         super.onAttach(context)
         if (context is OnEditingFinishedListener) {
             onEditingFinishedListener = context
@@ -35,7 +34,6 @@ class ShopItemFragment : Fragment() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d("LIFECYCLE", "onCreate")
         super.onCreate(savedInstanceState)
         setShopItemId()
     }
@@ -45,14 +43,12 @@ class ShopItemFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.d("LIFECYCLE", "onCreateView")
         _binding = FragmentShopItemBinding.inflate(inflater, container, false)
         val view = binding.root
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Log.d("LIFECYCLE", "onViewCreated")
         super.onViewCreated(view, savedInstanceState)
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
@@ -71,41 +67,6 @@ class ShopItemFragment : Fragment() {
                 viewModel.editShopItem(shopItemId, name, count)
             }
         }
-    }
-
-    override fun onStart() {
-        Log.d("LIFECYCLE", "onStart")
-        super.onStart()
-    }
-
-    override fun onResume() {
-        Log.d("LIFECYCLE", "onResume")
-        super.onResume()
-    }
-
-    override fun onPause() {
-        Log.d("LIFECYCLE", "onPause")
-        super.onPause()
-    }
-
-    override fun onStop() {
-        Log.d("LIFECYCLE", "onStop")
-        super.onStop()
-    }
-
-    override fun onDestroyView() {
-        Log.d("LIFECYCLE", "onDestroyView")
-        super.onDestroyView()
-    }
-
-    override fun onDestroy() {
-        Log.d("LIFECYCLE", "onDestroy")
-        super.onDestroy()
-    }
-
-    override fun onDetach() {
-        Log.d("LIFECYCLE", "onDetach")
-        super.onDetach()
     }
 
     private fun observeViewModel() {
