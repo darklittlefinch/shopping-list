@@ -50,7 +50,7 @@ class ShopItemViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    fun editShopItem(id: Int, inputName: String?, inputCount: String?) {
+    fun editShopItem(inputName: String?, inputCount: String?) {
         val name = parseName(inputName)
         val count = parseCount(inputCount)
 
