@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,10 +41,9 @@ class ShopItemFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentShopItemBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -64,7 +62,7 @@ class ShopItemFragment : Fragment() {
             if (shopItemId == ShopItem.UNDEFINED_ID) {
                 viewModel.addShopItem(name, count)
             } else {
-                viewModel.editShopItem(shopItemId, name, count)
+                viewModel.editShopItem(name, count)
             }
         }
     }
