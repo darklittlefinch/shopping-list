@@ -12,11 +12,19 @@ import androidx.lifecycle.ViewModelProvider
 import com.elliemoritz.shoppinglist.R
 import com.elliemoritz.shoppinglist.databinding.FragmentShopItemBinding
 import com.elliemoritz.shoppinglist.domain.ShopItem
+import javax.inject.Inject
 
 class ShopItemFragment : Fragment() {
+
+    private val component by lazy {
+        (requireActivity().application as ShopListApp).component
+    }
+
     private var _binding: FragmentShopItemBinding? = null
     private val binding get() = _binding!!
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
     private lateinit var viewModel: ShopItemViewModel
 
     private var shopItemId = ShopItem.UNDEFINED_ID
@@ -25,6 +33,8 @@ class ShopItemFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        component.inject(this)
+
         if (context is OnEditingFinishedListener) {
             onEditingFinishedListener = context
         } else {
@@ -49,7 +59,7 @@ class ShopItemFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this)[ShopItemViewModel::class.java]
+        viewModel = ViewModelProvider(this, viewModelFactory)[ShopItemViewModel::class.java]
         observeViewModel()
 
         if (shopItemId != ShopItem.UNDEFINED_ID) {

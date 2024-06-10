@@ -1,17 +1,15 @@
 package com.elliemoritz.shoppinglist.data
 
-import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import com.elliemoritz.shoppinglist.domain.ShopItem
 import com.elliemoritz.shoppinglist.domain.ShopListRepository
+import javax.inject.Inject
 
-class ShopListRepositoryImpl(
-    application: Application
+class ShopListRepositoryImpl @Inject constructor(
+    private val shopListDao: ShopListDao,
+    private val mapper: ShopListMapper
 ) : ShopListRepository {
-
-    private val shopListDao = AppDatabase.getInstance(application).shopListDao()
-    private val mapper = ShopListMapper()
 
     override fun getShopList(): LiveData<List<ShopItem>> {
         return shopListDao.getShopList().map {
